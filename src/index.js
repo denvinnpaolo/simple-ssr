@@ -1,16 +1,16 @@
-const express = require('express');
-const React = require('react');
-const renderToString = require('react-router-dom/server').renderToString;
+import express from 'express';
+import Renderer from './helpers/Renderer';
 
-// Client Components
-const Home = require('./client/components/Home.js').default;
 
 const app = express();
 
-app.get(`/`, (req, res) => {
-    const content = renderToString(<Home />);
+app.use(express.static("public"));    
 
-    res.send(content);
+
+app.get(`/`, (req, res) => {
+    
+
+    res.send(Renderer());
 });
 
 app.listen(3000, () => {
