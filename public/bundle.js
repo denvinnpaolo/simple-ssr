@@ -38812,6 +38812,30 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// const UsersList = ( props ) => {
+//     useEffect(() => {
+//         props.fetchUsers()
+//     }, []);
+
+//     const renderUsers = () => {
+//         return props.users.map(user => <li key={user.id}>{user.name}</li>)
+//     }
+//     return (
+//         <div>
+//             Here's a big list of users:
+//             <ul>{renderUsers()}</ul>
+//         </div>
+//     )
+// };
+
+// const mapStateToProps = ( state ) => {
+//     const { users } = state;
+//     return {users: users}
+// };
+
+// const loadData = ( store ) => {
+//     return store.dispatch(fetchUsers())
+// }
 var UsersList = function (_Component) {
     _inherits(UsersList, _Component);
 

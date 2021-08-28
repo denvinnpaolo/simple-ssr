@@ -200,6 +200,10 @@ var _Renderer2 = _interopRequireDefault(_Renderer);
 
 var _reactRouterConfig = __webpack_require__(2);
 
+var _expressHttpProxy = __webpack_require__(20);
+
+var _expressHttpProxy2 = _interopRequireDefault(_expressHttpProxy);
+
 var _Routes = __webpack_require__(3);
 
 var _Routes2 = _interopRequireDefault(_Routes);
@@ -213,7 +217,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var app = (0, _express2.default)();
 // Custom store for server
 
-
+app.use("/api", (0, _expressHttpProxy2.default)("http://react-ssr-api.herokuapp.com", {
+    proxyReqOptDecorator: function proxyReqOptDecorator(opts) {
+        opts.header['x-forwarded-host'] = 'localhost:3000';
+        return opts;
+    }
+}));
 app.use(_express2.default.static("public"));
 
 app.get('*', function (req, res) {
@@ -382,6 +391,30 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// const UsersList = ( props ) => {
+//     useEffect(() => {
+//         props.fetchUsers()
+//     }, []);
+
+//     const renderUsers = () => {
+//         return props.users.map(user => <li key={user.id}>{user.name}</li>)
+//     }
+//     return (
+//         <div>
+//             Here's a big list of users:
+//             <ul>{renderUsers()}</ul>
+//         </div>
+//     )
+// };
+
+// const mapStateToProps = ( state ) => {
+//     const { users } = state;
+//     return {users: users}
+// };
+
+// const loadData = ( store ) => {
+//     return store.dispatch(fetchUsers())
+// }
 var UsersList = function (_Component) {
     _inherits(UsersList, _Component);
 
@@ -535,6 +568,12 @@ exports.default = function () {
 /***/ (function(module, exports) {
 
 module.exports = require("serialize-javascript");
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+module.exports = require("express-http-proxy");
 
 /***/ })
 /******/ ]);
