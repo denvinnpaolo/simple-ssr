@@ -15,11 +15,17 @@ app.use(express.static("public"));
 app.get(`*`, (req, res) => {
     const store = createStore();
 
-    matchRoutes(Routes, req.path).map(({ route }) => {
-        return route.loadData ? route.loadData() : null
+    const promises = matchRoutes(Routes, req.path).map(({ route }) => {
+        return route.loadData ? route.loadData(store) : null
     });
 
-    res.send(Renderer(req, store));
+    Promise.all(promises)
+        .then(() => {
+            res.send(Renderer(req, store));
+        })
+        .catch(( e ) => console.log({message: 'error resolving Promise.all', error: e}))
+
+    
 });
 
 app.listen(3000, () => {
