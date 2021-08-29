@@ -2,40 +2,16 @@ import React, { Component, useEffect } from 'react'
 import { connect } from 'react-redux';
 import { fetchUsers } from '../actions';
 
-
-// const UsersList = ( props ) => {
-//     useEffect(() => {
-//         props.fetchUsers()
-//     }, []);
-
-//     const renderUsers = () => {
-//         return props.users.map(user => <li key={user.id}>{user.name}</li>)
-//     }
-//     return (
-//         <div>
-//             Here's a big list of users:
-//             <ul>{renderUsers()}</ul>
-//         </div>
-//     )
-// };
-
-// const mapStateToProps = ( state ) => {
-//     const { users } = state;
-//     return {users: users}
-// };
-
-// const loadData = ( store ) => {
-//     return store.dispatch(fetchUsers())
-// }
 class UsersList extends Component {
     componentDidMount() {
         this.props.fetchUsers();
     }
 
     renderUsers() {
-        return this.props.users.map(user => {
-            return <li key={user.id}>{user.name}</li>
-        })
+        console.log(this.props.users)
+        // return this.props.users.map(user => {
+        //     return <li key={user.id}>{user.name}</li>
+        // })
     }
 
     render () {
