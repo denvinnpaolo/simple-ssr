@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { connect } from 'react-redux';
 import { fetchUsers } from '../actions';
 
@@ -28,5 +28,12 @@ function mapStateToProps(state) {
     return { users: state.users };
 };
 
+function loadData(store) {
+    return store.dispatch(fetchUsers());
+};
 
-export default connect(mapStateToProps, { fetchUsers })(UsersList)
+
+export default {
+    loadData,
+    component: connect(mapStateToProps, { fetchUsers })(UsersList)
+}
