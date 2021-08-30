@@ -12,7 +12,7 @@ import reducers from './reducers/index.js';
 
 const axiosInstance = axios.create({
     baseURL: "/api"
-})
+});
 
 const store = createStore(reducers, window.INITIAL_STATE, applyMiddleware(thunk.withExtraArgument(axiosInstance)));
 
