@@ -9,26 +9,24 @@ import UsersListPage from './pages/UsersListPage';
 
 export default [
     {
-        ...App,
-        routes: [
-            {
-                ...AdminsListPage,
-                path: '/admins',
-        
-            },
-            {
-                ...HomePage,
-                path: '/',
-                exact: true
-            },
-            {
-                ...UsersListPage,
-                path: '/users',
-        
-            },
-            {
-                ...NotFoundPage
-            }
-        ]
+      ...App,
+      routes: [
+        {
+          ...HomePage,
+          path: '/',
+          exact: true
+        },
+        {
+            ...AdminsListPage,
+            path: '/admins'
+          },
+        {
+          ...UsersListPage,
+          path: '/users'
+        },
+        {
+          ...NotFoundPage
+        }
+      ]
     }
-];
+  ];

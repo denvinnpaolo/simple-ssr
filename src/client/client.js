@@ -14,12 +14,17 @@ const axiosInstance = axios.create({
     baseURL: "/api"
 });
 
-const store = createStore(reducers, window.INITIAL_STATE, applyMiddleware(thunk.withExtraArgument(axiosInstance)));
-
-ReactDOM.hydrate( 
+const store = createStore(
+    reducers,
+    window.INITIAL_STATE,
+    applyMiddleware(thunk.withExtraArgument(axiosInstance))
+  );
+  
+  ReactDOM.hydrate(
     <Provider store={store}>
-        <BrowserRouter>
-            <div>{renderRoutes(Routes)}</div>
-        </BrowserRouter>
+      <BrowserRouter>
+        <div>{renderRoutes(Routes)}</div>
+      </BrowserRouter>
     </Provider>,
-    document.querySelector("#root"));
+    document.querySelector('#root')
+  );
