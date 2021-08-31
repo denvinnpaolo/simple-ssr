@@ -10,35 +10,48 @@ import createStore from './helpers/createStore.js';
 
 const app = express();
 
-
 app.use(
-    '/api',
-    proxy('http://react-ssr-api.herokuapp.com', {
-      proxyReqOptDecorator(opts) {
-        opts.headers['x-forwarded-host'] = 'localhost:3000';
-        return opts;
+  '/api',
+  proxy('http://react-ssr-api.herokuapp.com', {
+    proxyReqOptDecorator(opts) {
+      opts.headers['x-forwarded-host'] = 'localhost:3000';
+      return opts;
+    }
+  })
+);
+app.use(express.static('public'));
+app.get('*', (req, res) => {
+  const store = createStore(req);
+
+  const promises = matchRoutes(Routes, req.path)
+    .map(({ route }) => {
+      return route.loadData ? route.loadData(store) :  null
+    })
+    .map(promise => {
+      if (promise) {
+        return new Promise((resolve, reject) => {
+          promise.then(resolve).catch(resolve)
+        })
       }
     })
-  );
+ 
 
-app.use(express.static("public"));
+  Promise.all(promises).then(() => {
+    const context = {};
+    const content = Renderer(req, store, context);
 
-app.get(`*`, (req, res) => {
-    const store = createStore(req);
+    if (context.url) {
+      return res.redirect(301, context.url);
+    }
 
-    const promises = matchRoutes(Routes, req.path).map(({ route }) => {
-        return route.loadData ? route.loadData(store) : null
-    });
+    if (context.notFound) {
+      res.status(404);
+    }
 
-    Promise.all(promises)
-        .then(() => {
-            res.send(Renderer(req, store));
-        })
-        .catch(( e ) => console.log({message: 'error resolving Promise.all', error: e}))
-
-    
+    res.send(content);
+  });
 });
 
 app.listen(3000, () => {
-    console.log('Listening to port: 3000')
-})
+  console.log('Listening on prot 3000');
+});
