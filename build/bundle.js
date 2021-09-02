@@ -82,10 +82,7 @@ Object.defineProperty(exports, "__esModule", {
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var FETCH_USERS = exports.FETCH_USERS = 'FETCH_USERS';
-var FETCH_CURRENT_USER = exports.FETCH_CURRENT_USER = 'FETCH_CURRENT_USER';
-var FETCH_ADMINS = exports.FETCH_ADMINS = "FETCH_ADMINS";
-
+var FETCH_USERS = exports.FETCH_USERS = 'fetch_users';
 var fetchUsers = exports.fetchUsers = function fetchUsers() {
   return function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch, getState, api) {
@@ -101,7 +98,6 @@ var fetchUsers = exports.fetchUsers = function fetchUsers() {
               res = _context.sent;
 
 
-              // disptach is coming from thunk
               dispatch({
                 type: FETCH_USERS,
                 payload: res
@@ -121,6 +117,7 @@ var fetchUsers = exports.fetchUsers = function fetchUsers() {
   }();
 };
 
+var FETCH_CURRENT_USER = exports.FETCH_CURRENT_USER = 'fetch_current_user';
 var fetchCurrentUser = exports.fetchCurrentUser = function fetchCurrentUser() {
   return function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch, getState, api) {
@@ -130,7 +127,7 @@ var fetchCurrentUser = exports.fetchCurrentUser = function fetchCurrentUser() {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return api.get("/current_user");
+              return api.get('/current_user');
 
             case 2:
               res = _context2.sent;
@@ -155,6 +152,7 @@ var fetchCurrentUser = exports.fetchCurrentUser = function fetchCurrentUser() {
   }();
 };
 
+var FETCH_ADMINS = exports.FETCH_ADMINS = 'fetch_admins';
 var fetchAdmins = exports.fetchAdmins = function fetchAdmins() {
   return function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch, getState, api) {
@@ -164,7 +162,7 @@ var fetchAdmins = exports.fetchAdmins = function fetchAdmins() {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return api.get("/admins");
+              return api.get('/admins');
 
             case 2:
               res = _context3.sent;
@@ -330,6 +328,8 @@ app.get('*', function (req, res) {
     var content = (0, _Renderer2.default)(req, store, context);
 
     if (context.url) {
+      console.log(context);
+
       return res.redirect(301, context.url);
     }
 
@@ -384,6 +384,8 @@ var _serializeJavascript = __webpack_require__(12);
 
 var _serializeJavascript2 = _interopRequireDefault(_serializeJavascript);
 
+var _reactHelmet = __webpack_require__(28);
+
 var _Routes = __webpack_require__(5);
 
 var _Routes2 = _interopRequireDefault(_Routes);
@@ -405,7 +407,9 @@ exports.default = function (req, store, context) {
         )
     ));
 
-    return '<html>\n            <head>\n                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">            \n            </head>\n            <body>\n                <div id="root">' + content + '</div>\n                <script>\n                    window.INITIAL_STATE = ' + (0, _serializeJavascript2.default)(store.getState()) + '\n                </script>\n                <script src="bundle.js"></script>\n\n            </body>\n        </html>';
+    var helmet = _reactHelmet.Helmet.renderStatic();
+
+    return '<html>\n            <head>\n                ' + helmet.title.toString() + '\n                ' + helmet.meta.toString() + '\n                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">            \n            </head>\n            <body>\n                <div id="root">' + content + '</div>\n                <script>\n                    window.INITIAL_STATE = ' + (0, _serializeJavascript2.default)(store.getState()) + '\n                </script>\n                <script src="bundle.js"></script>\n\n            </body>\n        </html>';
 };
 
 /***/ }),
@@ -506,7 +510,7 @@ var Header = function Header(_ref) {
       { className: 'nav-wrapper' },
       _react2.default.createElement(
         _reactRouterDom.Link,
-        { to: '/', className: 'brand-logo' },
+        { to: '/', className: 'brand-logo center' },
         'React SSR'
       ),
       _react2.default.createElement(
@@ -802,9 +806,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(2);
 
+var _reactHelmet = __webpack_require__(28);
+
 var _actions = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -838,11 +846,26 @@ var UsersList = function (_Component) {
             });
         }
     }, {
+        key: 'head',
+        value: function head() {
+            return _react2.default.createElement(
+                _reactHelmet.Helmet,
+                null,
+                _react2.default.createElement(
+                    'title',
+                    null,
+                    this.props.users.length + ' Users Loaded'
+                ),
+                _react2.default.createElement('meta', _defineProperty({ property: 'og:title' }, 'property', 'Users App'))
+            );
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
                 'div',
                 null,
+                this.head(),
                 'Here\'s a big list of users:',
                 _react2.default.createElement(
                     'ul',
@@ -1002,7 +1025,7 @@ exports.default = function () {
 
     switch (action.type) {
         case _actions.FETCH_CURRENT_USER:
-            return action.payload.data || false;
+            return action.payload.data;
         default:
             return state;
     }
@@ -1034,6 +1057,12 @@ exports.default = function () {
             return state;
     }
 };
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = require("react-helmet");
 
 /***/ })
 /******/ ]);
